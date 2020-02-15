@@ -20,6 +20,7 @@ dependencies:
   parse_server_sdk: ^1.0.24
   intl: ">=0.15.0 <1.0.0"
   path: ^1.6.4
+  flutter_secure_storage: ^3.3.1+1
 
 dev_dependencies:
   flutter_test:

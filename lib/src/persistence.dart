@@ -78,3 +78,24 @@ class LocalFilePersistence implements PersistenceProvider {
     return path;
   }
 }
+
+class SecretsPercistence implements PersistenceProvider {
+  @override
+  Future deleteDocument(Document doc) {
+    // TODO: implement deleteDocument
+    throw UnimplementedError();
+  }
+
+  @override
+  Future loadDocuments(DocumentList documentList, {Function onChangedListener}) {
+    // TODO: implement loadDocuments
+    throw UnimplementedError();
+  }
+
+  @override
+  saveDocument(Document doc) {
+    // TODO: implement saveDocument
+    throw UnimplementedError();
+  }
+
+}
