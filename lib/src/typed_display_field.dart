@@ -17,6 +17,7 @@ import 'package:validators/validators.dart' as validators;
 /// document property and fieldName property will make it interactive and
 /// will automatically persist the state. This is useful for using checkboxes
 /// in lists.
+/// "secret" - any filed name eding in "secret" will be displayed masked.
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -60,6 +61,9 @@ class TypedDisplayField extends StatelessWidget {
         document: document,
         fieldName: fieldName,
       );
+    }
+    if(fieldName.toLowerCase().endsWith("secret")){
+      return Text("\u2022\u2022\u2022\u2022\u2022");
     }
     return Flexible(
       child: Container(
