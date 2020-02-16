@@ -84,7 +84,7 @@ class SecretsPercistence implements PersistenceProvider {
   final storage = new FlutterSecureStorage();
   @override
   Future deleteDocument(Document doc) async {
-    throw UnimplementedError();
+    await storage.delete(key: doc.id);
   }
 
   @override
