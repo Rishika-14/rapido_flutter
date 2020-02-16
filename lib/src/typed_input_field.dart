@@ -115,7 +115,7 @@ class TypedInputField extends StatelessWidget {
     }
 
     if (fieldName.toLowerCase().endsWith("secret")) {
-      return SecretsFormField(
+      return SecretFormField(
         initialValue: initialValue,
         onSaved: onSaved,
         label: label,
@@ -250,23 +250,23 @@ class TypedInputField extends StatelessWidget {
 /// A FormField for setting secrets such as passwords and tokens.
 /// Provides a text field that is masked by default but that
 /// the user can toggle.
-class SecretsFormField extends StatefulWidget {
+class SecretFormField extends StatefulWidget {
   final String initialValue;
   final Function onSaved;
   final String label;
 
-  const SecretsFormField({
+  const SecretFormField({
     @required this.initialValue,
     @required this.onSaved,
     @required this.label,
   });
   @override
   State<StatefulWidget> createState() {
-    return new _SecretsFormFieldState();
+    return new _SecretFormFieldState();
   }
 }
 
-class _SecretsFormFieldState extends State<SecretsFormField> {
+class _SecretFormFieldState extends State<SecretFormField> {
   TextEditingController controller = TextEditingController();
   @override
   void initState() {
