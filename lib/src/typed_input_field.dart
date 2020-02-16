@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:rapido/rapido.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter/services.dart';
+import 'package:passwordfield/passwordfield.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -17,6 +18,7 @@ import 'package:flutter/services.dart';
 /// ends in "image" -> image
 /// ends in "text" -> multiline string
 /// ends in "?" -> boolean
+/// ends in "secret" -> password string
 /// All other fields return a single line text input field.
 /// Optionally, you can provide an appropriate FieldOptions subclass object
 /// to specify how to render the field.
@@ -112,6 +114,14 @@ class TypedInputField extends StatelessWidget {
       );
     }
 
+    if (fieldName.toLowerCase().endsWith("secret")) {
+      return SecretsFormField(
+        initialValue: initialValue,
+        onSaved: onSaved,
+        label: label,
+      );
+    }
+
     return _getTextFormField();
   }
 
@@ -160,13 +170,12 @@ class TypedInputField extends StatelessWidget {
             initialDate: currentValue ?? DateTime.now(),
             lastDate: DateTime(2100));
         inputValue = date;
-        if(!dateOnly) {
-              final time = await showTimePicker(
-              context: context,
-              initialTime:
-                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-            );
-            inputValue = DateTimeField.combine(date, time);
+        if (!dateOnly) {
+          final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+          );
+          inputValue = DateTimeField.combine(date, time);
         }
         return inputValue;
       },
@@ -234,6 +243,49 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: signed, decimal: true),
+    );
+  }
+}
+
+/// A FormField for setting secrets such as passwords and tokens.
+/// Provides a text field that is masked by default but that
+/// the user can toggle.
+class SecretsFormField extends StatefulWidget {
+  final String initialValue;
+  final Function onSaved;
+  final String label;
+
+  const SecretsFormField({
+    @required this.initialValue,
+    @required this.onSaved,
+    @required this.label,
+  });
+  @override
+  State<StatefulWidget> createState() {
+    return new _SecretsFormFieldState();
+  }
+}
+
+class _SecretsFormFieldState extends State<SecretsFormField> {
+  TextEditingController controller = TextEditingController();
+  @override
+  void initState() {
+    controller.text = widget.initialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FormField(
+      builder: (FormFieldState<String> state) {
+        return PasswordField(
+          hintText: widget.label,
+          controller: controller,
+        );
+      },
+      onSaved: (String val) {
+        widget.onSaved(controller.text);
+      },
     );
   }
 }

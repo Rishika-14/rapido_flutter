@@ -119,7 +119,6 @@ class SecretsPercistence implements PersistenceProvider {
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {
     Map<String, String> docMaps = await storage.readAll();
-    print("**** $docMaps");
     // I'm following the rule of 3 here (for now), duplicating this code
     // It does seem like handling turning strings of json into
     // documents should be done in one place
