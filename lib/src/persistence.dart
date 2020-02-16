@@ -96,15 +96,16 @@ class SecretsPercistence implements PersistenceProvider {
     // It does seem like handling turning strings of json into
     // documents should be done in one place
     docMaps.forEach((String key, String value) {
-      if (key == documentList.documentType) {
-        if (value.length != 0) {
-          Map newData = json.decode(value);
+      if (value.length != 0) {
+        Map newData = json.decode(value);
+        if (newData["_docType"] == documentList.documentType) {
           newData.keys.forEach((dynamic key) {
             if (key == "latlong" && newData[key] != null) {
               // convert latlongs to the correct type
               newData[key] = Map<String, double>.from(newData[key]);
             }
           });
+
           Document loadedDoc = Document.fromMap(newData);
           loadedDoc.addListener(documentList.notifyListeners);
           documentList.add(loadedDoc, saveOnAdd: false);
