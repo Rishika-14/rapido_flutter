@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
 class DocumentList extends ListBase<Document> with ChangeNotifier {
-
   /// Create a DocumentList for a given docType string. Useful for
   /// loading data synchronously. For example:
   /// DocumentList documentList = await DocumentList.createDocumentList("myDocType");
@@ -76,7 +75,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
-    if(autoLoad){
+    if (autoLoad) {
       this.loadPersistedDocuments();
     }
   }

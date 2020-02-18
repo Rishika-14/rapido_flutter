@@ -1,7 +1,15 @@
-## [0.2.1] - 2020-02-25
+## [0.2.3] - 2020-02-16
+ * Updated DateTimeFormFieldPicker depency to latest
+
+## [0.2.2] - 2020-02-16
+ * Added SecretsPersistenceProvider to use device secrets store.
+ * Added secrets input type, any field ending in "secret" will get a password form field for editing and display.
+ * Moved project to Gitlab
+
+## [0.2.1] - 2020-01-25
  * Removed unused UserPage code
  
-## [0.2.0] - 2020-02-25
+## [0.2.0] - 2020-01-25
  * Removed package dependency warnings by explcitly declaring dependencies
  * Removed experimental code for Parse Server support
 

@@ -62,7 +62,7 @@ class TypedDisplayField extends StatelessWidget {
         fieldName: fieldName,
       );
     }
-    if(fieldName.toLowerCase().endsWith("secret")){
+    if (fieldName.toLowerCase().endsWith("secret")) {
       return Text("\u2022\u2022\u2022\u2022\u2022");
     }
     return Flexible(
@@ -108,7 +108,8 @@ class MapDisplayField extends StatelessWidget {
         tiltGesturesEnabled: false,
         zoomGesturesEnabled: false,
         myLocationEnabled: false,
-        markers: Set<Marker>.of([Marker(markerId: MarkerId("center"), position: pos)]),
+        markers: Set<Marker>.of(
+            [Marker(markerId: MarkerId("center"), position: pos)]),
         // onMapCreated: (GoogleMapController controller) {
         //   controller.addMarker(MarkerOptions(position: pos));
         // },
