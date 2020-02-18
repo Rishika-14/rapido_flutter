@@ -1,3 +1,6 @@
+## [0.2.4] - 2020-02-16
+ * Fix code formatting in library
+
 ## [0.2.3] - 2020-02-16
  * Updated DateTimeFormFieldPicker depency to latest
 
