@@ -140,6 +140,7 @@ class SecretsPercistence implements PersistenceProvider {
       }
     });
   }
+
   /// Persists the given Document in the device's secret store
   /// as json. The key for each entry in the secret store is the
   /// Document's id property.
