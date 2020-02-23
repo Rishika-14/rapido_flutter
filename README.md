@@ -31,7 +31,7 @@ You can replace any widget with your own widget, or you can use built in customi
 
 # Rapido Online
  * [Get Rapido](https://pub.dartlang.org/packages/rapido)
- * [Our Github Repo](https://github.com/rapido-mobile/rapido-flutter)
+ * [Our Git Repo](https://gitlab.com/rickspencer3/rapido-flutter)
  * [Rapido Tutorial](https://rapido-mobile.github.io/tutorials/introduction.html)
  * We have some intro videos on our [Youtube Channel](https://www.youtube.com/channel/UCeoRpyhpNJmiMuAEJ4WRljg)
 
@@ -110,4 +110,4 @@ DocumentForm(taskList, index: 0);
 ```
 
 ## Feedback Welcome
-Rapido is undergoing rapid development. Please visit [our Github repo](https://github.com/rapido-mobile/rapido-flutter) to log any issues or features requests. Of course, pull requests are most welcome.
+Rapido is always under development. Please visit [our git repo](https://gitlab.com/rickspencer3/rapido-flutter) to log any issues or features requests. Of course, pull requests are most welcome.
