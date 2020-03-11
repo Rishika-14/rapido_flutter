@@ -55,7 +55,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   Document operator [](int index) => _documents[index];
 
   void operator []=(int index, Document value) {
-    Document oldDoc = _documents[index];
+      Document oldDoc = _documents[index];
     _documents[index] = value;
     _documents[index]["_time_stamp"] =
         new DateTime.now().millisecondsSinceEpoch.toInt();
