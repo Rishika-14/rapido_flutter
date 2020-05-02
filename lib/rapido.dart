@@ -17,3 +17,4 @@ export 'src/document_list_page_view.dart';
 export 'src/list_picker.dart';
 export 'src/field_options.dart';
 export 'src/persistence.dart';
+export 'src/sqlite_persistence.dart';

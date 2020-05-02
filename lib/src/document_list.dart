@@ -55,7 +55,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   Document operator [](int index) => _documents[index];
 
   void operator []=(int index, Document value) {
-      Document oldDoc = _documents[index];
+    Document oldDoc = _documents[index];
     _documents[index] = value;
     _documents[index]["_time_stamp"] =
         new DateTime.now().millisecondsSinceEpoch.toInt();
@@ -107,18 +107,16 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   @override
   add(Document doc, {bool saveOnAdd = true}) async {
     doc.persistenceProvider = persistenceProvider;
+    _documents.add(doc);
+    
     if (saveOnAdd) {
+      doc.persistenceProvider = null; //disable saves temporarily
       doc["_docType"] = documentType;
       doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-    }
-
-    _documents.add(doc);
-    doc.addListener(() {
-      notifyListeners();
-    });
-    if (saveOnAdd) {
+      doc.persistenceProvider = persistenceProvider; //re-enable saving
       doc.save();
     }
+    doc.addListener(notifyListeners);
     notifyListeners();
   }
 
