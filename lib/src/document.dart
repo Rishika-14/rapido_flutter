@@ -105,6 +105,8 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     newData.keys.forEach((dynamic k) {
       String key = k.toString();
       // convert latlongs to the corret type
+      // some backends persist as json encoded strings
+      // they are typically Map<string, double> when decoded
       if (key.endsWith("latlong") && newData[key] != null) {
         if(newData[key] is String) {
           newData[key] = jsonDecode(newData[key]);
@@ -112,7 +114,8 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
         newData[key] = Map<String, double>.from(newData[key]);
       }
 
-      // convert ints to booleans for boolean fields
+      // convert ints to booleans
+      // some backends don't support boolean, only ints
       if (key.endsWith("?") && newData[key] != null) {
         if (newData[key] is int) {
           newData[key] = newData[key] == 1;
@@ -121,6 +124,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
       _map[key] = newData[key];
     });
     
+    // if the document is newly created it may not have an id set
     if (newData["_id"] == null) {
       _map["_id"] = randomFileSafeId(24);
     } else {

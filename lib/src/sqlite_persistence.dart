@@ -13,9 +13,10 @@ class SqlLitePersistence implements PersistenceProvider {
   SqlLitePersistence(this.databaseName);
 
   @override
-  Future deleteDocument(Document doc) {
-    // TODO: implement deleteDocument
-    return null;
+  Future deleteDocument(Document doc) async {
+    _getDatabase().then((Database database) {
+      database.delete(doc.documentType, where: "_id = ?", whereArgs: [doc.id]);
+    });
   }
 
   @override
@@ -95,18 +96,17 @@ class SqlLitePersistence implements PersistenceProvider {
     return vStr;
   }
 
-  List<dynamic> _safeValues(Document doc){
+  List<dynamic> _safeValues(Document doc) {
     Map<String, dynamic> safeMap = Map.from(doc);
-    safeMap.keys.forEach((String key){
-      if(safeMap[key] is bool) {
-        if(safeMap[key]) {
+    safeMap.keys.forEach((String key) {
+      if (safeMap[key] is bool) {
+        if (safeMap[key]) {
           safeMap[key] = 1;
-        }
-        else {
+        } else {
           safeMap[key] = 0;
         }
       }
-      if(key.endsWith("latlong")) {
+      if (key.endsWith("latlong")) {
         safeMap[key] = jsonEncode(safeMap[key]);
       }
     });
