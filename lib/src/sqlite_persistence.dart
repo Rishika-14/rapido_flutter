@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 
 class SqlLitePersistence implements PersistenceProvider {
   final String databaseName;
-
+  Database _database;
   SqlLitePersistence(this.databaseName);
 
   @override
@@ -20,16 +20,18 @@ class SqlLitePersistence implements PersistenceProvider {
   @override
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {
-    List<Map<String, dynamic>> maps =
-        await _getDocuments(documentList.documentType);
-    maps.forEach((Map<String, dynamic> map) {
-      Document loadedDoc = Document.fromMap(map);
-      loadedDoc.addListener(documentList.notifyListeners);
-      documentList.add(loadedDoc, saveOnAdd: false);
-    });
+    if (await _checkDocumentTypeExists(documentList.documentType)) {
+      List<Map<String, dynamic>> maps =
+          await _getDocuments(docType: documentList.documentType);
+      maps.forEach((Map<String, dynamic> map) {
+        Document loadedDoc = Document.fromMap(map);
+        loadedDoc.addListener(documentList.notifyListeners);
+        documentList.add(loadedDoc, saveOnAdd: false);
+      });
+    }
   }
 
-  Future<List<Map<String, dynamic>>> _getDocuments(String docType) async {
+  Future<List<Map<String, dynamic>>> _getDocuments({String docType}) async {
     Database database = await _getDatabase();
     List<Map<String, dynamic>> maps = await database.query(docType);
     return maps;
@@ -37,25 +39,47 @@ class SqlLitePersistence implements PersistenceProvider {
 
   Future<bool> _checkDocumentTypeExists(String docType) async {
     Database database = await _getDatabase();
-    List<Map<String, dynamic>> maps = await database.rawQuery("SHOW TABLES;");
-    print(maps);
-    return true;
+    String q =
+        "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$docType';";
+
+    List<Map<String, dynamic>> maps = await database.rawQuery(q);
+    return maps[0]["count(*)"] == 1;
   }
 
   Future<Database> _getDatabase() async {
-    final Database database = await openDatabase(
-      join(await getDatabasesPath(), this.databaseName),
-    );
-    return database;
+    if (this._database == null) {
+      _database = await openDatabase(
+        join(await getDatabasesPath(), this.databaseName),
+      );
+    }
+    return _database;
+  }
+
+  String _createTableSql(Document doc) {
+    String s = "CREATE TABLE ${doc.documentType}(_id TEXT PRIMARY KEY";
+    doc.keys.forEach((String key) {
+      if (key != "_id") {
+        s += ", '$key' BLOB";
+      }
+    });
+    s += ")";
+    return s;
+  }
+
+  Future _createTableFromDoc({Document doc}) async {
+    Database database = await _getDatabase();
+    await database.execute(_createTableSql(doc));
   }
 
   @override
   saveDocument(Document doc) async {
     if (!await _checkDocumentTypeExists(doc.documentType)) {
-      print("table does not exist");
+      print(" ------- creating table");
+      await _createTableFromDoc(doc: doc);
+    } else {
+        print(" ----- table exists");
     }
-    // check if the document exists
-    
+
     // create or insert the document
     // select * from documentType WHERE id = doc.id
 
