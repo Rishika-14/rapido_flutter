@@ -86,13 +86,18 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     }
   }
 
-  Document.fromMap(Map newData,
+  Document.fromMap(Map loadedData,
       {this.persistenceProvider = const LocalFilePersistence()}) {
-    if (newData == null) return;
+    if (loadedData == null) return;
+    Map newData = Map.from(loadedData);
+    
     newData.keys.forEach((dynamic key) {
       if (key == "latlong" && newData[key] != null) {
         // convert latlongs to the correct type
         newData[key] = Map<String, double>.from(newData[key]);
+      }
+      if(key.toString().endsWith("?") && newData[key] != null){
+        newData[key] = newData[key] == 1;
       }
       _map[key] = newData[key];
     });
