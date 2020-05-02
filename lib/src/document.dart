@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'persistence.dart';
@@ -101,14 +102,18 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     Map newData = Map.from(loadedData);
 
     // iterate through and apply special cases
-    newData.keys.forEach((dynamic key) {
+    newData.keys.forEach((dynamic k) {
+      String key = k.toString();
       // convert latlongs to the corret type
-      if (key == "latlong" && newData[key] != null) {
+      if (key.endsWith("latlong") && newData[key] != null) {
+        if(newData[key] is String) {
+          newData[key] = jsonDecode(newData[key]);
+        }
         newData[key] = Map<String, double>.from(newData[key]);
       }
 
       // convert ints to booleans for boolean fields
-      if (key.toString().endsWith("?") && newData[key] != null) {
+      if (key.endsWith("?") && newData[key] != null) {
         if (newData[key] is int) {
           newData[key] = newData[key] == 1;
         }

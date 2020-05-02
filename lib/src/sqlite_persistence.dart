@@ -5,6 +5,7 @@ import 'package:rapido/src/document_list.dart';
 import 'persistence.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:convert';
 
 class SqlLitePersistence implements PersistenceProvider {
   final String databaseName;
@@ -94,6 +95,24 @@ class SqlLitePersistence implements PersistenceProvider {
     return vStr;
   }
 
+  List<dynamic> _safeValues(Document doc){
+    Map<String, dynamic> safeMap = Map.from(doc);
+    safeMap.keys.forEach((String key){
+      if(safeMap[key] is bool) {
+        if(safeMap[key]) {
+          safeMap[key] = 1;
+        }
+        else {
+          safeMap[key] = 0;
+        }
+      }
+      if(key.endsWith("latlong")) {
+        safeMap[key] = jsonEncode(safeMap[key]);
+      }
+    });
+    return safeMap.values.toList();
+  }
+
   @override
   saveDocument(Document doc) async {
     if (!await _checkDocumentTypeExists(doc.documentType)) {
@@ -106,6 +125,7 @@ class SqlLitePersistence implements PersistenceProvider {
 
     String q = "INSERT OR REPLACE INTO ${doc.documentType} $kStr VALUES $vStr";
     Database database = await _getDatabase();
-    int changes = await database.rawUpdate(q, doc.values.toList());
+
+    int changes = await database.rawUpdate(q, _safeValues(doc));
   }
 }
