@@ -14,7 +14,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get documentType => _map["_docType"];
   set documentType(String v) => _map["docType"] = v;
 
-  /// The documents unique id. Typically used to manage persistence,
+  /// The document's unique id. Typically used to manage persistence,
   /// such as in Document.save()
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
@@ -86,21 +86,36 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     }
   }
 
+  /// Creates a Rapido Document from a Map<String, dynamic>.
+  /// This is typically used by PersistenceProviders to convert load data from their sourse.
+  /// This is where a lot of complexity is concentrated related to translating between different
+  /// data stores and Rapido.
+  ///
+  /// This function is not typically used during application development.
   Document.fromMap(Map loadedData,
       {this.persistenceProvider = const LocalFilePersistence()}) {
     if (loadedData == null) return;
+
+    // create a copy of the loaded data in case the source map is read only
+    // such as from sqlite
     Map newData = Map.from(loadedData);
-    
+
+    // iterate through and apply special cases
     newData.keys.forEach((dynamic key) {
+      // convert latlongs to the corret type
       if (key == "latlong" && newData[key] != null) {
-        // convert latlongs to the correct type
         newData[key] = Map<String, double>.from(newData[key]);
       }
-      if(key.toString().endsWith("?") && newData[key] != null){
-        newData[key] = newData[key] == 1;
+
+      // convert ints to booleans for boolean fields
+      if (key.toString().endsWith("?") && newData[key] != null) {
+        if (newData[key] is int) {
+          newData[key] = newData[key] == 1;
+        }
       }
       _map[key] = newData[key];
     });
+    
     if (newData["_id"] == null) {
       _map["_id"] = randomFileSafeId(24);
     } else {

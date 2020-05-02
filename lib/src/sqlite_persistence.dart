@@ -106,9 +106,6 @@ class SqlLitePersistence implements PersistenceProvider {
 
     String q = "INSERT OR REPLACE INTO ${doc.documentType} $kStr VALUES $vStr";
     Database database = await _getDatabase();
-    int changes  = await database.rawUpdate(q, doc.values.toList());
-    print(changes);
-
-    // INSERT OR REPLACE INTO Tasker (done?, date, title, pri count, subtitle, _id, _docType, _time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)) sql 'INSERT OR REPLACE INTO Tasker (done?, date, title, pri count, subtitle, _id, _docType, _time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)' args [false, 5/2/2020, aaaaaa, 0, , ygt\yhpcwcYyejZbdcpdYYw], Tasker, 1588446405844]}
+    int changes = await database.rawUpdate(q, doc.values.toList());
   }
 }
