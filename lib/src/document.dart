@@ -27,7 +27,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  /// Optionally save documents on a remote server
+  /// Will default to local file persistence if persistenceProvider is null.
   Document({Map<String, dynamic> initialValues, this.persistenceProvider}) {
     // default persistence
     if (persistenceProvider == null) {
