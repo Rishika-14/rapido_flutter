@@ -71,18 +71,44 @@ class SqlLitePersistence implements PersistenceProvider {
     await database.execute(_createTableSql(doc));
   }
 
+  String _keyStringFromDoc(Document doc) {
+    bool first = true;
+    String keysStr = "(";
+    doc.keys.forEach((String key) {
+      if (!first) {
+        keysStr += ", ";
+      }
+      first = false;
+      keysStr += "'$key'";
+    });
+    keysStr += ")";
+    return keysStr;
+  }
+
+  String _valuesStringFromDoc(Document doc) {
+    String vStr = ("(?");
+    for (int i = 1; i < doc.length; i++) {
+      vStr += ", ?";
+    }
+    vStr += ")";
+    return vStr;
+  }
+
   @override
   saveDocument(Document doc) async {
     if (!await _checkDocumentTypeExists(doc.documentType)) {
-      print(" ------- creating table");
       await _createTableFromDoc(doc: doc);
-    } else {
-        print(" ----- table exists");
     }
+    String kStr = _keyStringFromDoc(doc);
+    String vStr = _valuesStringFromDoc(doc);
+    print(kStr);
+    print(vStr);
 
-    // create or insert the document
-    // select * from documentType WHERE id = doc.id
+    String q = "INSERT OR REPLACE INTO ${doc.documentType} $kStr VALUES $vStr";
+    Database database = await _getDatabase();
+    int changes  = await database.rawUpdate(q, doc.values.toList());
+    print(changes);
 
-    return null;
+    // INSERT OR REPLACE INTO Tasker (done?, date, title, pri count, subtitle, _id, _docType, _time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)) sql 'INSERT OR REPLACE INTO Tasker (done?, date, title, pri count, subtitle, _id, _docType, _time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)' args [false, 5/2/2020, aaaaaa, 0, , ygt\yhpcwcYyejZbdcpdYYw], Tasker, 1588446405844]}
   }
 }
