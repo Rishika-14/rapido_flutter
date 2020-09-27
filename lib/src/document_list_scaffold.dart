@@ -73,6 +73,14 @@ class DocumentListScaffold extends StatefulWidget {
   /// A BoxDecoration for each field in a DocumentPage
   final BoxDecoration documentFieldDecoration;
 
+  /// Provide a custom FloatingActiobButton.
+  /// This will replace the default "add" FAB.
+  final FloatingActionButton customFAB;
+
+  /// Toggles showing the Float Action Button.
+  /// Defaults to true.
+  final bool showFab;
+
   DocumentListScaffold(
     this.documentList, {
     this.title,
@@ -89,6 +97,8 @@ class DocumentListScaffold extends StatefulWidget {
     this.documentPageDecoration,
     this.documentFieldDecoration,
     this.showDocumentPageOnTap: true,
+    this.showFab: true,
+    this.customFAB,
   });
 
   _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
@@ -126,12 +136,16 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton: AddDocumentFloatingActionButton(
-        widget.documentList,
-        addActionLabel: widget.addActionLabel,
-        formDecoration: widget.formDecoration,
-        formFieldDecoration: widget.formFieldDecoration,
-      ),
+      floatingActionButton: widget.showFab && widget.customFAB == null
+          ? AddDocumentFloatingActionButton(
+              widget.documentList,
+              addActionLabel: widget.addActionLabel,
+              formDecoration: widget.formDecoration,
+              formFieldDecoration: widget.formFieldDecoration,
+            )
+          : widget.showFab && widget.customFAB != null
+              ? widget.customFAB
+              : null,
     );
   }
 }
