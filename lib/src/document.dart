@@ -13,11 +13,13 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   /// The Documents type, typically used to organize documents
   /// typically used to organize documents, for example in a DocumentList
   String get documentType => _map["_docType"];
+
   set documentType(String v) => _map["docType"] = v;
 
   /// The document's unique id. Typically used to manage persistence,
   /// such as in Document.save()
   String get id => _map["_id"];
+
   set id(String v) => _map["_id"] = v;
 
   /// How to provide persistence. Defaults to LocalFileProvider
@@ -29,7 +31,10 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
   /// Will default to local file persistence if persistenceProvider is null.
-  Document({Map<String, dynamic> initialValues, this.persistenceProvider}) {
+  Document({
+    required Map<String, dynamic> initialValues,
+    required this.persistenceProvider,
+  }) {
     // default persistence
     if (persistenceProvider == null) {
       persistenceProvider = LocalFilePersistence();
@@ -46,7 +51,8 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     }
   }
 
-  dynamic operator [](Object fieldName) => _map[fieldName];
+  dynamic operator [](Object? fieldName) =>
+      fieldName == null ? null : _map[fieldName];
 
   void operator []=(String fieldName, dynamic value) {
     _map[fieldName] = value;
@@ -58,9 +64,11 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     notifyListeners();
   }
 
-  void remove(Object key) {
-    _map.remove(key);
-    notifyListeners();
+  void remove(Object? key) {
+    if (key != null) {
+      _map.remove(key);
+      notifyListeners();
+    }
   }
 
   List<String> get keys {
@@ -108,7 +116,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
       // some backends persist as json encoded strings
       // they are typically Map<string, double> when decoded
       if (key.endsWith("latlong") && newData[key] != null) {
-        if(newData[key] is String) {
+        if (newData[key] is String) {
           newData[key] = jsonDecode(newData[key]);
         }
         newData[key] = Map<String, double>.from(newData[key]);
@@ -123,7 +131,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
       }
       _map[key] = newData[key];
     });
-    
+
     // if the document is newly created it may not have an id set
     if (newData["_id"] == null) {
       _map["_id"] = randomFileSafeId(24);
