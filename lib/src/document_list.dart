@@ -26,19 +26,19 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// A callback function that fires after a DocumentList is finished loading
   /// persisted data. It passes a reference to itself,
   /// onLoadComplete: (DocumentList documentList) {/* do something */}
-  Function onLoadComplete;
+  Function? onLoadComplete;
 
   /// True when there are no more documents to load
   /// False when documents are still loading
   bool documentsLoaded = false;
 
-  Map<String, String> _labels;
-  List<Document> _documents;
+  Map<String, String>? _labels;
+  List<Document> _documents = [];
 
   /// FieldOptions permit specifying how to render a field in different
   /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is
   /// map of field names to objects that are subclass of FieldOptions.
-  Map<String, FieldOptions> fieldOptionsMap;
+  Map<String, FieldOptions>? fieldOptionsMap;
 
   /// How to provide persistence. Defaults to LocalFileProvider
   /// which will save the documents as files on the device.
@@ -57,6 +57,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   void operator []=(int index, Document value) {
     Document oldDoc = _documents[index];
     _documents[index] = value;
+    //TODO: improvise this to timestamp
     _documents[index]["_time_stamp"] =
         new DateTime.now().millisecondsSinceEpoch.toInt();
     _documents[index]["_docType"] = documentType;
@@ -67,27 +68,28 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   /// The documentType parameter should be unique.
-  DocumentList(this.documentType,
-      {this.onLoadComplete,
-      Map<String, String> labels,
-      this.fieldOptionsMap,
-      bool autoLoad = true,
-      this.persistenceProvider = const LocalFilePersistence()}) {
-    _labels = labels;
-    _documents = [];
+  DocumentList(
+    this.documentType, {
+    this.onLoadComplete,
+    Map<String, String>? labels,
+    this.fieldOptionsMap,
+    bool autoLoad = true,
+    this.persistenceProvider = const LocalFilePersistence(),
+  })  : _documents = [],
+        _labels = labels  {
     if (autoLoad) {
       this.loadPersistedDocuments();
     }
   }
 
-  set labels(Map<String, String> labels) {
+  set labels(Map<String, String>? labels) {
     _labels = labels;
   }
 
   /// The labels to use in UI elements. If the labels property is not set, the
   /// DocumentList will simply return any key not starting with "_".
   /// Returns null if there is no data and no labels provided.
-  Map<String, String> get labels {
+  Map<String, String>? get labels {
     if (_labels == null) {
       if (_documents.length < 1) {
         return null;
@@ -108,7 +110,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   add(Document doc, {bool saveOnAdd = true}) async {
     doc.persistenceProvider = persistenceProvider;
     _documents.add(doc);
-    
+
     if (saveOnAdd) {
       doc.persistenceProvider = null; //disable saves temporarily
       doc["_docType"] = documentType;
@@ -130,18 +132,22 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     });
   }
 
-  @override
-  bool remove(Object value) {
-    Map<String, dynamic> map = value;
-    for (int i = 0; i < _documents.length; i++) {
-      if (map == _documents[i]) {
-        removeAt(i);
-        return true;
-      }
-    }
-    return false;
-  }
+  //TODO: not clear. go through again
+  // @override
+  // bool remove(Object? value) {
+  //   if (value != null) {
+  //     Map<String, dynamic> map = value!;
+  //     for (int i = 0; i < _documents.length; i++) {
+  //       if (map == _documents[i]) {
+  //         removeAt(i);
+  //         return true;
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // }
 
+  //TODO: why we have not set the array as empty
   @override
   clear() {
     _documents.forEach((Document doc) {
@@ -159,6 +165,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     return doc;
   }
 
+  //TODO: what is this syntax
   @override
   void sort([int compare(Document a, Document b)]) {
     _documents.sort(compare);
@@ -212,7 +219,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   void _signalLoadComplete() {
     documentsLoaded = true;
-    if (onLoadComplete != null) onLoadComplete(this);
+    if (onLoadComplete != null) onLoadComplete!(this);
     notifyListeners();
   }
 }

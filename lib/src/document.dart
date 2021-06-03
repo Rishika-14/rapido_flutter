@@ -26,14 +26,14 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   /// which will save the documents as files on the device.
   /// Use ParseProvider to persist to a Parse server.
   /// Set to null if no persistence is desired.
-  PersistenceProvider persistenceProvider;
+  PersistenceProvider? persistenceProvider;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
   /// Will default to local file persistence if persistenceProvider is null.
   Document({
     required Map<String, dynamic> initialValues,
-    required this.persistenceProvider,
+    this.persistenceProvider,
   }) {
     // default persistence
     if (persistenceProvider == null) {
@@ -84,14 +84,14 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   Future save() async {
     if (persistenceProvider != null) {
-      await persistenceProvider.saveDocument(this);
+      await persistenceProvider!.saveDocument(this);
       notifyListeners();
     }
   }
 
   delete() {
     if (persistenceProvider != null) {
-      persistenceProvider.deleteDocument(this);
+      persistenceProvider!.deleteDocument(this);
     }
   }
 
