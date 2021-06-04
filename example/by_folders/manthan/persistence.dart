@@ -19,27 +19,6 @@ abstract class PersistenceProvider {
   Future deleteDocument(Document doc);
 }
 
-class FirebasePersistence implements PersistenceProvider {
-  @override
-  Future deleteDocument(Document doc) {
-    // TODO: implement deleteDocument
-    throw UnimplementedError();
-  }
-
-  @override
-  Future loadDocuments(DocumentList documentList,
-      {Function onChangedListener}) {
-    // TODO: implement loadDocuments
-    throw UnimplementedError();
-  }
-
-  @override
-  saveDocument(Document doc) {
-    // TODO: implement saveDocument
-    throw UnimplementedError();
-  }
-}
-
 /// Default Persistence Provider. Saves all Documents locally on the user's
 /// device. The documents are saved in json format, and are saved in clear
 /// text. Is suitable for a medium-sized DocumentList.
@@ -60,7 +39,7 @@ class LocalFilePersistence implements PersistenceProvider {
   /// that match the DocumentList's documentType property.
   @override
   Future loadDocuments(DocumentList documentList,
-      {Function? onChangedListener}) async {
+      {Function onChangedListener}) async {
     // final List<Document> _documents = [];
     Directory appDir = await getApplicationDocumentsDirectory();
 
@@ -68,28 +47,25 @@ class LocalFilePersistence implements PersistenceProvider {
         .listSync(recursive: true, followLinks: true)
         .forEach((FileSystemEntity f) {
       if (f.path.endsWith('.json')) {
-        Document? doc = _readDocumentFromFile(
+        Document doc = _readDocumentFromFile(
             f, documentList.documentType, documentList.notifyListeners);
         if (doc != null) documentList.add(doc, saveOnAdd: false);
       }
     });
   }
 
-  Document? _readDocumentFromFile(
+  Document _readDocumentFromFile(
       FileSystemEntity f, String documentType, Function notifyListeners) {
-    Map? m = _loadMapFromFilePath(f);
-    if(m != null) {
-      Document loadedDoc = Document.fromMap(m);
-      if (loadedDoc["_docType"] == documentType) {
-        //TODO; check if this typecasting is ok
-        loadedDoc.addListener(notifyListeners as void Function());
-        return loadedDoc;
-      }
+    Map m = _loadMapFromFilePath(f);
+    Document loadedDoc = Document.fromMap(m);
+    if (loadedDoc["_docType"] == documentType) {
+      loadedDoc.addListener(notifyListeners);
+      return loadedDoc;
     }
     return null;
   }
 
-  Map? _loadMapFromFilePath(FileSystemEntity f) {
+  Map _loadMapFromFilePath(FileSystemEntity f) {
     String j = new File(f.path).readAsStringSync();
     if (j.length != 0) {
       Map newData = json.decode(j);

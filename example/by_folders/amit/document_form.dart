@@ -36,19 +36,16 @@ class _DocumentFormState extends State<DocumentForm> {
   // A document to get updated by the form
   Map<String, dynamic> _documentValues = Map<String, dynamic>();
 
-  List<Widget>? _buildFormFields(BuildContext context) {
+  List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
     // creat a form field for each support label
-    if(widget.documentList.labels == null) {
-      return null;
-    }
-    widget.documentList.labels!.keys.forEach((String label) {
-      String fieldName = widget.documentList.labels![label];
+    widget.documentList.labels.keys.forEach((String label) {
+      String fieldName = widget.documentList.labels[label];
       // Use the labels map to get initial values in the case
       // where the form is editing an existig document
       dynamic initialValue;
       if (widget.document != null) {
-        initialValue = widget.document![fieldName];
+        initialValue = widget.document[fieldName];
       }
       FieldOptions? fieldOptions;
       if (widget.documentList.fieldOptionsMap != null) {
@@ -59,15 +56,12 @@ class _DocumentFormState extends State<DocumentForm> {
         Container(
           padding: EdgeInsets.all(10.0),
           decoration: widget.fieldDecoration,
-          child: TypedInputField(
-            fieldName,
-            label: label,
-            fieldOptions: fieldOptions,
-            initialValue: initialValue,
-            onSaved: (dynamic value) {
-              _documentValues[widget.documentList.labels[label]] = value;
-            },
-          ),
+          child: TypedInputField(fieldName,
+              label: label,
+              fieldOptions: fieldOptions,
+              initialValue: initialValue, onSaved: (dynamic value) {
+            _documentValues[widget.documentList.labels[label]] = value;
+          }),
           margin: EdgeInsets.all(10.0),
         ),
       );

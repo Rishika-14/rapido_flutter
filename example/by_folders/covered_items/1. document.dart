@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'persistence.dart';
+import '../manthan/persistence.dart';
 
 /// A Document is a persisted Map of type <String, dynamic>.
 /// It is used by DocumentList amd all related UI widgets.
@@ -26,14 +26,14 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   /// which will save the documents as files on the device.
   /// Use ParseProvider to persist to a Parse server.
   /// Set to null if no persistence is desired.
-  PersistenceProvider? persistenceProvider;
+  PersistenceProvider persistenceProvider;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
   /// Will default to local file persistence if persistenceProvider is null.
   Document({
     required Map<String, dynamic> initialValues,
-    this.persistenceProvider,
+    required this.persistenceProvider,
   }) {
     // default persistence
     if (persistenceProvider == null) {
@@ -84,19 +84,17 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   Future save() async {
     if (persistenceProvider != null) {
-      await persistenceProvider!.saveDocument(this);
+      await persistenceProvider.saveDocument(this);
       notifyListeners();
     }
   }
 
-  //TODO: why notify listeners is not called here.
   delete() {
     if (persistenceProvider != null) {
-      persistenceProvider!.deleteDocument(this);
+      persistenceProvider.deleteDocument(this);
     }
   }
 
-  //TODO: Understand this better and see if this is required.
   /// Creates a Rapido Document from a Map<String, dynamic>.
   /// This is typically used by PersistenceProviders to convert load data from their sourse.
   /// This is where a lot of complexity is concentrated related to translating between different

@@ -15,11 +15,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// loading data synchronously. For example:
   /// DocumentList documentList = await DocumentList.createDocumentList("myDocType");
   static Future<DocumentList> createDocumentList(String docType) async {
-    DocumentList documentList = DocumentList(
-      docType,
-      autoLoad: false,
-      persistenceProvider: FirebasePersistence(),
-    );
+    DocumentList documentList = DocumentList(docType, autoLoad: false);
     await documentList.loadPersistedDocuments();
     return documentList;
   }
@@ -30,25 +26,25 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// A callback function that fires after a DocumentList is finished loading
   /// persisted data. It passes a reference to itself,
   /// onLoadComplete: (DocumentList documentList) {/* do something */}
-  Function? onLoadComplete;
+  Function onLoadComplete;
 
   /// True when there are no more documents to load
   /// False when documents are still loading
   bool documentsLoaded = false;
 
-  Map<String, String>? _labels;
-  List<Document> _documents = [];
+  Map<String, String> _labels;
+  List<Document> _documents;
 
   /// FieldOptions permit specifying how to render a field in different
   /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is
   /// map of field names to objects that are subclass of FieldOptions.
-  Map<String, FieldOptions>? fieldOptionsMap;
+  Map<String, FieldOptions> fieldOptionsMap;
 
   /// How to provide persistence. Defaults to LocalFileProvider
   /// which will save the documents as files on the device.
   /// Use ParseProvider to persist to a Parse server.
   /// Set to null if no persistence is desired.
-  PersistenceProvider _persistenceProvider;
+  PersistenceProvider persistenceProvider;
 
   set length(int newLength) {
     _documents.length = newLength;
@@ -72,31 +68,27 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   /// The documentType parameter should be unique.
-  DocumentList(
-    this.documentType, {
-    this.onLoadComplete,
-    Map<String, String>? labels,
-    this.fieldOptionsMap,
-    bool autoLoad = true,
-    required persistenceProvider,
-  })  : _documents = [],
-        _labels = labels,
-        _persistenceProvider = persistenceProvider {
+  DocumentList(this.documentType,
+      {this.onLoadComplete,
+      Map<String, String> labels,
+      this.fieldOptionsMap,
+      bool autoLoad = true,
+      this.persistenceProvider = const LocalFilePersistence()}) {
+    _labels = labels;
+    _documents = [];
     if (autoLoad) {
       this.loadPersistedDocuments();
     }
   }
 
-  set labels(Map<String, String>? labels) {
+  set labels(Map<String, String> labels) {
     _labels = labels;
   }
-
 
   /// The labels to use in UI elements. If the labels property is not set, the
   /// DocumentList will simply return any key not starting with "_".
   /// Returns null if there is no data and no labels provided.
-  Map<String, String>? get labels {
-    //AVOID: it is a corner case which will never be true with us.
+  Map<String, String> get labels {
     if (_labels == null) {
       if (_documents.length < 1) {
         return null;
@@ -115,14 +107,14 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   @override
   add(Document doc, {bool saveOnAdd = true}) async {
-    doc.persistenceProvider = _persistenceProvider;
+    doc.persistenceProvider = persistenceProvider;
     _documents.add(doc);
 
     if (saveOnAdd) {
       doc.persistenceProvider = null; //disable saves temporarily
       doc["_docType"] = documentType;
       doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-      doc.persistenceProvider = _persistenceProvider; //re-enable saving
+      doc.persistenceProvider = persistenceProvider; //re-enable saving
       doc.save();
     }
     doc.addListener(notifyListeners);
@@ -140,19 +132,17 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   //TODO: not clear. go through again
-  // @override
-  // bool remove(Object? value) {
-  //   if (value != null) {
-  //     Map<String, dynamic> map = value!;
-  //     for (int i = 0; i < _documents.length; i++) {
-  //       if (map == _documents[i]) {
-  //         removeAt(i);
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
+  @override
+  bool remove(Object value) {
+    Map<String, dynamic> map = value;
+    for (int i = 0; i < _documents.length; i++) {
+      if (map == _documents[i]) {
+        removeAt(i);
+        return true;
+      }
+    }
+    return false;
+  }
 
   //TODO: why we have not set the array as empty
   @override
@@ -173,7 +163,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   @override
-  void sort([int compare(Document a, Document b)?]) {
+  void sort([int compare(Document a, Document b)]) {
     _documents.sort(compare);
     notifyListeners();
   }
@@ -202,7 +192,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     notifyListeners();
   }
 
-  //ignore for prachet
   static String randomFileSafeId(int length) {
     var rand = new Random();
     var codeUnits = new List.generate(length, (index) {
@@ -218,15 +207,15 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   Future loadPersistedDocuments() async {
-    if (_persistenceProvider != null) {
-      await _persistenceProvider.loadDocuments(this);
+    if (persistenceProvider != null) {
+      await persistenceProvider.loadDocuments(this);
     }
     _signalLoadComplete();
   }
 
   void _signalLoadComplete() {
     documentsLoaded = true;
-    if (onLoadComplete != null) onLoadComplete!(this);
+    if (onLoadComplete != null) onLoadComplete(this);
     notifyListeners();
   }
 }

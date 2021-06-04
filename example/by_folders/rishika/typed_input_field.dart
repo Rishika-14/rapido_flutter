@@ -24,7 +24,7 @@ import 'package:passwordfield/passwordfield.dart';
 /// to specify how to render the field.
 class TypedInputField extends StatelessWidget {
   /// Options for configuring the InputField
-  final FieldOptions? fieldOptions;
+  final FieldOptions fieldOptions;
 
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;

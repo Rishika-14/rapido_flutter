@@ -10,32 +10,29 @@ class InputListFieldOptions extends FieldOptions {
   final String displayField;
   final String valueField;
 
-  InputListFieldOptions({
-    this.documentList,
-    this.displayField,
-    this.valueField,
-  });
+  InputListFieldOptions(
+      {this.documentList, this.displayField, this.valueField});
 }
 
 /// Field options for amount fields, currently ignored by the android
 ///  keyboard.
 class AmountFieldOptions extends FieldOptions {
-  final bool? allowNegatives;
+  final bool allowNegatives;
 
   AmountFieldOptions({this.allowNegatives});
 }
 
 /// Forces an input field to be rendered as an IntegerPicker.
 class IntegerPickerFieldOptions extends FieldOptions {
-  final int? minimum;
-  final int? maximum;
+  final int minimum;
+  final int maximum;
 
   IntegerPickerFieldOptions({this.minimum, this.maximum});
 }
 
 /// Provides options for configuring a Date or DateTime form field
 class DateTimeFieldOptions extends FieldOptions {
-  final String? formatString;
+  final String formatString;
 
   DateTimeFieldOptions({this.formatString});
 }
