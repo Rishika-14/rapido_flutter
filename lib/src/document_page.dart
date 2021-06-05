@@ -24,12 +24,13 @@ class DocumentPage extends StatelessWidget {
   /// stack.
   final DocumentForm documentForm;
 
-  DocumentPage(
-      {@required this.labels,
-      @required this.document,
-      this.decoration,
-      this.fieldDecoration,
-      this.documentForm});
+  DocumentPage({
+    @required this.labels,
+    @required this.document,
+    this.decoration,
+    this.fieldDecoration,
+    this.documentForm,
+  });
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];

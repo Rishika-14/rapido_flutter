@@ -5,17 +5,17 @@ import 'package:rapido/rapido.dart';
 abstract class FieldOptions {}
 
 /// Forces any input field to be rendered as a ListPicker
-class InputListFieldOptions extends FieldOptions {
-  final DocumentList documentList;
-  final String displayField;
-  final String valueField;
-
-  InputListFieldOptions({
-    this.documentList,
-    this.displayField,
-    this.valueField,
-  });
-}
+// class InputListFieldOptions extends FieldOptions {
+//   final DocumentList documentList;
+//   final String displayField;
+//   final String valueField;
+//
+//   InputListFieldOptions({
+//     this.documentList,
+//     this.displayField,
+//     this.valueField,
+//   });
+// }
 
 /// Field options for amount fields, currently ignored by the android
 ///  keyboard.

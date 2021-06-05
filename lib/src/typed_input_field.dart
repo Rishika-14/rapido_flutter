@@ -227,6 +227,7 @@ class TypedInputField extends StatelessWidget {
 
         if (fo.minimum != null && fo.maximum != null) {
           return IntegerPickerFormField(
+            key: GlobalKey(),
             label: label,
             initialValue: initialValue,
             fieldOptions: fo,
@@ -320,7 +321,7 @@ class TypedInputField extends StatelessWidget {
 /// FormField limited to 0 through 10.
 class IntegerPickerFormField extends StatefulWidget {
   const IntegerPickerFormField({
-    Key key,
+    required Key key,
     required this.initialValue,
     required this.fieldOptions,
     required this.onSaved,
@@ -353,7 +354,7 @@ class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        FormFieldCaption(widget.label),
+        FormFieldCaption(widget.label, key: GlobalKey(),),
         FormField(
           builder: (FormFieldState<int> state) {
             return NumberPicker(
@@ -379,7 +380,7 @@ class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
 
 /// A widget for captioning fields in DocumentForm and DocumentPage.
 class FormFieldCaption extends StatelessWidget {
-  const FormFieldCaption(this.label, {Key key}) : super(key: key);
+  const FormFieldCaption(this.label, {required Key key}) : super(key: key);
 
   final String label;
 

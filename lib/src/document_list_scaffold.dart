@@ -124,7 +124,7 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
       body: Container(
         child: DocumentListView(
           widget.documentList,
-          titleKeys: widget.titleKeys,
+          titleKeys: widget.titleKeys ?? [],
           subtitleKey: widget.subtitleKey,
           onItemTap: widget.onItemTap,
           customItemBuilder: widget.customItemBuilder,

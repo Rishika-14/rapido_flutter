@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:rapido/rapido.dart';
 
@@ -18,8 +17,12 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
   /// A BoxDecoration for each field in a DocumentForm
   final BoxDecoration formFieldDecoration;
 
-  AddDocumentFloatingActionButton(this.documentList,
-      {this.addActionLabel, this.formDecoration, this.formFieldDecoration});
+  AddDocumentFloatingActionButton(
+    this.documentList, {
+    this.addActionLabel,
+    this.formDecoration,
+    this.formFieldDecoration,
+  });
 
   @override
   Widget build(BuildContext context) {
