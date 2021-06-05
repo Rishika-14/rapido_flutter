@@ -19,19 +19,19 @@ class DocumentListScaffold extends StatefulWidget {
   /// A call back function to call when the default ListTile in the
   /// DocumentListView is tapped by the user.
   /// Ignored when customItemBuilder is used.
-  final Function onItemTap;
+  final Function? onItemTap;
 
   /// A list of keys for specifying which values to use in the title of the
   /// default ListTile in the DocumentListView, and the order in which to
   /// show them. Ignored when customItemBuilder is used.
-  final List<String> titleKeys;
+  final List<String>? titleKeys;
 
   /// The key specifying which value in the documents to use when
   /// rendering the default ListTiles. Ignored when customItemBuilder is used.
-  final String subtitleKey;
+  final String? subtitleKey;
 
   /// A box decoration, that, if supplied will be applied to the DocumentListView.
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
 
   //TODO: improvise typing of Function
   /// A call back function for building custom widgets for the DocumentListView,
@@ -40,47 +40,47 @@ class DocumentListScaffold extends StatefulWidget {
   /// widget.
   /// Widget customItemBuilder(int index) {/* create and return a custom widget
   /// for documentList[index]*/}
-  final Function customItemBuilder;
+  final Function? customItemBuilder;
 
   /// A widget to display when the DocumentListView is empty (when the
   /// DocumentList.length == 0)
-  final Widget emptyListWidget;
+  final Widget? emptyListWidget;
 
   /// Title to display on the scaffold. If not supplied, DocumentListScaffold
   /// will simply use the documentType property of the DocumentList.
-  final String title;
+  final String? title;
 
   /// Optional string to pass to pass to the AddDocumentFloatingActionButton.
   /// If supplied, the fab will use an extended fab, with the label.
-  final String addActionLabel;
+  final String? addActionLabel;
 
   /// Adds widgets to the titlebar, typically IconButtons.
-  final List<Widget> additionalActions;
+  final List<Widget>? additionalActions;
 
   /// If true, tapping on the item will automatically display a
   /// DocumentPage for the item. Defaults to true. Ignored if
   /// onItemTap is not null.
-  final bool showDocumentPageOnTap;
+  final bool? showDocumentPageOnTap;
 
   /// A BoxDecoration for automatically generated forms
-  final BoxDecoration formDecoration;
+  final BoxDecoration? formDecoration;
 
   /// A BoxDecoration for automatically generated pages
-  final BoxDecoration documentPageDecoration;
+  final BoxDecoration? documentPageDecoration;
 
   /// A BoxDecoration for each field in a DocumentForm
-  final BoxDecoration formFieldDecoration;
+  final BoxDecoration? formFieldDecoration;
 
   /// A BoxDecoration for each field in a DocumentPage
-  final BoxDecoration documentFieldDecoration;
+  final BoxDecoration? documentFieldDecoration;
 
   /// Provide a custom FloatingActiobButton.
   /// This will replace the default "add" FAB.
-  final FloatingActionButton customFAB;
+  final FloatingActionButton? customFAB;
 
   /// Toggles showing the Float Action Button.
   /// Defaults to true.
-  final bool showFab;
+  late final bool showFab;
 
   DocumentListScaffold(
     this.documentList, {
@@ -112,10 +112,10 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
       DocumentListSortButton(widget.documentList)
     ];
     if (widget.additionalActions != null) {
-      actions += widget.additionalActions;
+      actions += widget.additionalActions!;
     }
     String _title =
-        widget.title != null ? widget.title : widget.documentList.documentType;
+        widget.title != null ? widget.title! : widget.documentList.documentType;
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
