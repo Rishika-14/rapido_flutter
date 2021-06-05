@@ -39,11 +39,13 @@ class TypedInputField extends StatelessWidget {
   /// The initial value to display in the FormField.
   final dynamic initialValue;
 
-  TypedInputField(this.fieldName,
-      {@required this.label,
-      @required this.onSaved,
-      this.initialValue,
-      this.fieldOptions});
+  TypedInputField(
+    this.fieldName, {
+    required this.label,
+    required this.onSaved,
+    required this.initialValue,
+    this.fieldOptions,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +141,7 @@ class TypedInputField extends StatelessWidget {
         maxLines: lines,
         decoration: InputDecoration(labelText: label),
         initialValue: initialValue,
-        onSaved: (String value) {
+        onSaved: (String? value) {
           this.onSaved(value);
         });
   }
@@ -260,6 +262,7 @@ class SecretFormField extends StatefulWidget {
     @required this.onSaved,
     @required this.label,
   });
+
   @override
   State<StatefulWidget> createState() {
     return new _SecretFormFieldState();
@@ -268,6 +271,7 @@ class SecretFormField extends StatefulWidget {
 
 class _SecretFormFieldState extends State<SecretFormField> {
   TextEditingController controller = TextEditingController();
+
   @override
   void initState() {
     controller.text = widget.initialValue;

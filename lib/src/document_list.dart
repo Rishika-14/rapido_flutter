@@ -91,7 +91,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     _labels = labels;
   }
 
-
   /// The labels to use in UI elements. If the labels property is not set, the
   /// DocumentList will simply return any key not starting with "_".
   /// Returns null if there is no data and no labels provided.
@@ -139,20 +138,20 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     });
   }
 
-  //TODO: not clear. go through again
-  // @override
-  // bool remove(Object? value) {
-  //   if (value != null) {
-  //     Map<String, dynamic> map = value!;
-  //     for (int i = 0; i < _documents.length; i++) {
-  //       if (map == _documents[i]) {
-  //         removeAt(i);
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
+  //TODO: Why notifyListeners is not called here.
+  @override
+  bool remove(Object? value) {
+    if (value != null) {
+      Map<String, dynamic> map = value as Map<String, dynamic>;
+      for (int i = 0; i < _documents.length; i++) {
+        if (map == _documents[i]) {
+          removeAt(i);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   //TODO: why we have not set the array as empty
   @override
