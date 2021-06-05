@@ -13,13 +13,17 @@ class DocumentActionsButton extends StatelessWidget {
   final int index;
 
   /// A BoxDecoration for automatically generated forms
-  final BoxDecoration formDecoration;
+  final BoxDecoration? formDecoration;
 
   /// A BoxDecoration for each field in a DocumentForm
-  final BoxDecoration formFieldDecoration;
+  final BoxDecoration? formFieldDecoration;
 
-  DocumentActionsButton(this.documentList,
-      {@required this.index, this.formDecoration, this.formFieldDecoration});
+  DocumentActionsButton(
+    this.documentList, {
+    required this.index,
+    this.formDecoration,
+    this.formFieldDecoration,
+  });
 
   @override
   Widget build(BuildContext context) {
