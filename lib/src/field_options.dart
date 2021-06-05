@@ -35,7 +35,7 @@ class IntegerPickerFieldOptions extends FieldOptions {
 
 /// Provides options for configuring a Date or DateTime form field
 class DateTimeFieldOptions extends FieldOptions {
-  final String? formatString;
+  final String formatString;
 
-  DateTimeFieldOptions({this.formatString});
+  DateTimeFieldOptions({required this.formatString});
 }

@@ -54,9 +54,11 @@ class TypedInputField extends StatelessWidget {
         return _getListPickerFormField(fieldOptions);
       }
     }
+    //done
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }
+    //done
     if (fieldName.toLowerCase().endsWith("amount")) {
       return _getAmountFormField();
     }
@@ -78,6 +80,7 @@ class TypedInputField extends StatelessWidget {
       }
       return _getDateTimeFormField(dateFormat, true, context);
     }
+    //dont do for now
     if (fieldName.toLowerCase().endsWith("latlong")) {
       //work around json.decode reading _InternalHashMap<String, dynamic>
       Map<String, double> v;
@@ -101,6 +104,7 @@ class TypedInputField extends StatelessWidget {
       );
     }
 
+    //done
     if (fieldName.toLowerCase().endsWith("text")) {
       return _getTextFormField(lines: 10);
     }
@@ -128,8 +132,9 @@ class TypedInputField extends StatelessWidget {
   }
 
   String _getFormatStringFromOptions() {
-    String dateTimeFormat;
-    if (fieldOptions.runtimeType == DateTimeFieldOptions) {
+    late final String dateTimeFormat;
+    if (fieldOptions != null &&
+        fieldOptions.runtimeType == DateTimeFieldOptions) {
       DateTimeFieldOptions fo = fieldOptions as DateTimeFieldOptions;
       dateTimeFormat = fo.formatString;
     }
@@ -210,7 +215,7 @@ class TypedInputField extends StatelessWidget {
           return IntegerPickerFormField(
             label: label,
             initialValue: initialValue,
-            fieldOptions: fieldOptions,
+            fieldOptions: fo,
             onSaved: (int val) {
               this.onSaved(val);
             },
@@ -235,13 +240,13 @@ class TypedInputField extends StatelessWidget {
     bool signed = false;
     if (fieldOptions.runtimeType == AmountFieldOptions) {
       AmountFieldOptions fo = fieldOptions as AmountFieldOptions;
-      signed = fo.allowNegatives;
+      signed = fo.allowNegatives ?? false;
     }
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       initialValue: initialValue == null ? "0" : initialValue.toString(),
-      onSaved: (String value) {
-        this.onSaved(double.parse(value));
+      onSaved: (String? value) {
+        this.onSaved(value == null ? null : double.parse(value));
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: signed, decimal: true),
@@ -302,10 +307,10 @@ class _SecretFormFieldState extends State<SecretFormField> {
 class IntegerPickerFormField extends StatefulWidget {
   const IntegerPickerFormField({
     Key key,
-    @required this.initialValue,
-    @required this.fieldOptions,
-    @required this.onSaved,
-    this.label,
+    required this.initialValue,
+    required this.fieldOptions,
+    required this.onSaved,
+    required this.label,
   }) : super(key: key);
 
   final IntegerPickerFieldOptions fieldOptions;
@@ -320,12 +325,12 @@ class IntegerPickerFormField extends StatefulWidget {
 }
 
 class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
-  int _currentValue;
+  int _currentValue = 0;
 
   @override
   void initState() {
     widget.initialValue == null
-        ? _currentValue = widget.fieldOptions.minimum
+        ? _currentValue = widget.fieldOptions.minimum ?? 0
         : _currentValue = widget.initialValue;
     super.initState();
   }
@@ -337,18 +342,19 @@ class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
         FormFieldCaption(widget.label),
         FormField(
           builder: (FormFieldState<int> state) {
-            return NumberPicker.integer(
-              initialValue: _currentValue,
-              maxValue: widget.fieldOptions.maximum,
-              minValue: widget.fieldOptions.minimum,
-              onChanged: (num val) {
+            return NumberPicker(
+              value: _currentValue,
+              maxValue: widget.fieldOptions.maximum ?? double.infinity as int,
+              minValue:
+                  widget.fieldOptions.minimum ?? -(double.infinity as int),
+              onChanged: (int val) {
                 setState(() {
                   _currentValue = val;
                 });
               },
             );
           },
-          onSaved: (int val) {
+          onSaved: (int? val) {
             widget.onSaved(_currentValue);
           },
         ),
