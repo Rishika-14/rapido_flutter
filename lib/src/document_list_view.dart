@@ -14,18 +14,18 @@ class DocumentListView extends StatefulWidget {
   /// A list of keys for specifying which values to use in the title of the
   /// default ListTile in the DocumentListView, and the order in which to
   /// show them. Ignored when customItemBuilder is used.
-  final List<String> titleKeys;
+  final List<String>? titleKeys;
 
   /// The key specifying which value in the documents to use when
   /// rendering the default ListTiles. Ignored when customItemBuilder is used.
   /// By default, a field called "subtitle" will be used as a subtitle, but
   /// this property will overwrite that behavior
-  final String subtitleKey;
+  final String? subtitleKey;
 
   /// A call back function to call when the default ListTile in the
   /// DocumentListView is tapped by the user.
   /// Ignored when customItemBuilder is used.
-  final Function onItemTap;
+  final Function? onItemTap;
 
   /// A call back function for building custom widgets for the DocumentListView,
   /// rather than the default ListTile. Like a normal builder, it receives a
@@ -33,34 +33,34 @@ class DocumentListView extends StatefulWidget {
   /// widget.
   /// Widget customItemBuilder(int index) {/* create and return a custom widget
   /// for documentList[index]*/}
-  final Function customItemBuilder;
+  final Function? customItemBuilder;
 
   /// A widget to display when the DocumentListView is empty (when the
   /// DocumentList.length == 0)
-  final Widget emptyListWidget;
+  final Widget? emptyListWidget;
 
   /// Show default document page when the list item is tapped.
   /// Ignored if onItemTap callback is set.
-  final bool showDocumentPageOnTap;
+  final bool? showDocumentPageOnTap;
 
   /// Control the scroll axis. Defaults to Vertical. Ignored if
   /// customItemBuilder is null.
   final Axis scrollDirection;
 
   /// A BoxDecoration for the whole list view
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
 
   /// A BoxDecoration for automatically generated forms
-  final BoxDecoration formDecoration;
+  final BoxDecoration? formDecoration;
 
   /// A BoxDecoration for automatically generated pages
-  final BoxDecoration documentPageDecoration;
+  final BoxDecoration? documentPageDecoration;
 
   /// A BoxDecoration for each field in a DocumentForm
-  final BoxDecoration formFieldDecoration;
+  final BoxDecoration? formFieldDecoration;
 
   /// A BoxDecoration for each field in a DocumentPage
-  final BoxDecoration documentFieldDecoration;
+  final BoxDecoration? documentFieldDecoration;
 
   DocumentListView(this.documentList,
       {this.titleKeys,

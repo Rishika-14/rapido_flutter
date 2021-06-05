@@ -9,13 +9,13 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
 
   /// Optional string to describe the add action.
   /// If supplied, the fab will use an extended fab, with the label.
-  final String addActionLabel;
+  final String? addActionLabel;
 
   /// A BoxDecoration for automatically generated forms
-  final BoxDecoration formDecoration;
+  final BoxDecoration? formDecoration;
 
   /// A BoxDecoration for each field in a DocumentForm
-  final BoxDecoration formFieldDecoration;
+  final BoxDecoration? formFieldDecoration;
 
   AddDocumentFloatingActionButton(
     this.documentList, {
@@ -57,7 +57,7 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
             }),
           );
         },
-        label: Text(addActionLabel),
+        label: Text(addActionLabel ?? ''),
       );
     }
   }
