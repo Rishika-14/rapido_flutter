@@ -6,12 +6,12 @@ import 'package:rapido/rapido.dart';
 
 /// Convenience UI for creating all create, update, and delete UI
 /// for a given DocumentList. It will generate a default ListView.
-/// Can be customized with a customIemBuilder and/or a decoration.
+/// Can be customized with a customItemBuilder and/or a decoration.
 /// decoration, customItemBuild, and emptyListWidget, are passed
 /// through to the DocumentListView.
 ///
 /// To ignore item taps, set showDocumentPageOnTap to false.
-/// To set a special behavion for item taps, set onItemTap.
+/// To set a special behaviour for item taps, set onItemTap.
 class DocumentListScaffold extends StatefulWidget {
   /// The DocumentList rendered by the DocumentListScaffold
   final DocumentList documentList;
@@ -33,6 +33,7 @@ class DocumentListScaffold extends StatefulWidget {
   /// A box decoration, that, if supplied will be applied to the DocumentListView.
   final BoxDecoration decoration;
 
+  //TODO: improvise typing of Function
   /// A call back function for building custom widgets for the DocumentListView,
   /// rather than the default ListTile. Like a normal builder, it receives a
   /// integer as an index into the associated DocumentList and should return a

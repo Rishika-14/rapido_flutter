@@ -50,9 +50,9 @@ class TypedInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (fieldOptions != null) {
-      if (fieldOptions.runtimeType == InputListFieldOptions) {
-        return _getListPickerFormField(fieldOptions);
-      }
+      // if (fieldOptions.runtimeType == InputListFieldOptions) {
+      //   return _getListPickerFormField(fieldOptions);
+      // }
     }
     //done
     if (fieldName.toLowerCase().endsWith("count")) {
@@ -63,7 +63,7 @@ class TypedInputField extends StatelessWidget {
       return _getAmountFormField();
     }
 
-    //rishika
+    //done
     if (fieldName.toLowerCase().endsWith("datetime")) {
       String dateTimeFormat;
       if (fieldOptions != null) {
@@ -73,7 +73,7 @@ class TypedInputField extends StatelessWidget {
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
     }
-    //rishika
+    //done
     if (fieldName.toLowerCase().endsWith("date")) {
       String dateFormat;
       if (fieldOptions != null) {
@@ -84,29 +84,30 @@ class TypedInputField extends StatelessWidget {
       return _getDateTimeFormField(dateFormat, true, context);
     }
     //dont do for now
-    if (fieldName.toLowerCase().endsWith("latlong")) {
-      //work around json.decode reading _InternalHashMap<String, dynamic>
-      Map<String, double> v;
-      if (initialValue != null) {
-        v = Map<String, double>.from(initialValue);
-      }
-      return MapPointFormField(fieldName, label: label, initialValue: v,
-          onSaved: (Map<String, double> value) {
-        this.onSaved(value);
-      });
-    }
+    // if (fieldName.toLowerCase().endsWith("latlong")) {
+    //   //work around json.decode reading _InternalHashMap<String, dynamic>
+    //   Map<String, double> v;
+    //   if (initialValue != null) {
+    //     v = Map<String, double>.from(initialValue);
+    //   }
+    //   return MapPointFormField(fieldName, label: label, initialValue: v,
+    //       onSaved: (Map<String, double> value) {
+    //     this.onSaved(value);
+    //   });
+    // }
 
     //manthan
-    if (fieldName.toLowerCase().endsWith("image")) {
-      return ImageFormField(
-        fieldName,
-        initialValue: initialValue,
-        label: label,
-        onSaved: (String value) {
-          this.onSaved(value);
-        },
-      );
-    }
+    //TODO: ReEnable image as an option
+    // if (fieldName.toLowerCase().endsWith("image")) {
+    //   return ImageFormField(
+    //     fieldName,
+    //     initialValue: initialValue,
+    //     label: label,
+    //     onSaved: (String value) {
+    //       this.onSaved(value);
+    //     },
+    //   );
+    // }
 
     //done
     if (fieldName.toLowerCase().endsWith("text")) {
@@ -114,25 +115,26 @@ class TypedInputField extends StatelessWidget {
     }
 
     //amit
-    if (fieldName.toLowerCase().endsWith("?")) {
-      return BooleanFormField(
-        fieldName,
-        label: label,
-        initialValue: initialValue,
-        onSaved: (bool value) {
-          this.onSaved(value);
-        },
-      );
-    }
+    //TODO: ReEnable image as an option
+    // if (fieldName.toLowerCase().endsWith("?")) {
+    //   return BooleanFormField(
+    //     fieldName,
+    //     label: label,
+    //     initialValue: initialValue,
+    //     onSaved: (bool value) {
+    //       this.onSaved(value);
+    //     },
+    //   );
+    // }
 
     //leave this for now.
-    if (fieldName.toLowerCase().endsWith("secret")) {
-      return SecretFormField(
-        initialValue: initialValue,
-        onSaved: onSaved,
-        label: label,
-      );
-    }
+    // if (fieldName.toLowerCase().endsWith("secret")) {
+    //   return SecretFormField(
+    //     initialValue: initialValue,
+    //     onSaved: onSaved,
+    //     label: label,
+    //   );
+    // }
 
     return _getTextFormField();
   }
@@ -157,45 +159,51 @@ class TypedInputField extends StatelessWidget {
         });
   }
 
-  ListPickerFormField _getListPickerFormField(
-      InputListFieldOptions fieldOptions) {
-    return ListPickerFormField(
-      documentList: fieldOptions.documentList,
-      displayField: fieldOptions.displayField,
-      valueField: fieldOptions.valueField,
-      label: label,
-      initiValue: initialValue,
-      onSaved: (dynamic value) {
-        this.onSaved(value);
-      },
-    );
-  }
+  // ListPickerFormField _getListPickerFormField(
+  //     InputListFieldOptions fieldOptions) {
+  //   return ListPickerFormField(
+  //     documentList: fieldOptions.documentList,
+  //     displayField: fieldOptions.displayField,
+  //     valueField: fieldOptions.valueField,
+  //     label: label,
+  //     initiValue: initialValue,
+  //     onSaved: (dynamic value) {
+  //       this.onSaved(value);
+  //     },
+  //   );
+  // }
 
   DateTimeField _getDateTimeFormField(
-      formatString, dateOnly, BuildContext context) {
+    formatString,
+    dateOnly,
+    BuildContext context,
+  ) {
     DateFormat format = DateFormat(formatString);
     return DateTimeField(
       onShowPicker: (context, currentValue) async {
-        DateTime inputValue;
-        DateTime date = await showDatePicker(
+        DateTime? inputValue;
+        DateTime? date = await showDatePicker(
             context: context,
             firstDate: DateTime(1900),
             initialDate: currentValue ?? DateTime.now(),
             lastDate: DateTime(2100));
         inputValue = date;
         if (!dateOnly) {
-          final time = await showTimePicker(
+          TimeOfDay? time = await showTimePicker(
             context: context,
             initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
           );
-          inputValue = DateTimeField.combine(date, time);
+          //TODO: handle the case when the date is note picked. remove ! from
+          // next file.
+          inputValue = DateTimeField.combine(date!, time);
         }
         return inputValue;
       },
       format: format,
       decoration: InputDecoration(labelText: label),
-      onSaved: (DateTime value) {
-        String v = format.format(value);
+      onSaved: (DateTime? value) {
+        //TODO: how to handle the case when value is null
+        String v = format.format(value ?? DateTime.now());
         this.onSaved(v);
       },
       initialValue: _formatInitialDateTime(format),
@@ -233,8 +241,8 @@ class TypedInputField extends StatelessWidget {
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       initialValue: initialValue == null ? "0" : initialValue.toString(),
-      onSaved: (String value) {
-        this.onSaved(int.parse(value));
+      onSaved: (String? value) {
+        this.onSaved(value == null ? null : int.parse(value));
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
@@ -263,47 +271,47 @@ class TypedInputField extends StatelessWidget {
 /// A FormField for setting secrets such as passwords and tokens.
 /// Provides a text field that is masked by default but that
 /// the user can toggle.
-class SecretFormField extends StatefulWidget {
-  final String initialValue;
-  final Function onSaved;
-  final String label;
+// class SecretFormField extends StatefulWidget {
+//   final String initialValue;
+//   final Function onSaved;
+//   final String label;
+//
+//   const SecretFormField({
+//     @required this.initialValue,
+//     @required this.onSaved,
+//     @required this.label,
+//   });
+//
+//   @override
+//   State<StatefulWidget> createState() {
+//     return new _SecretFormFieldState();
+//   }
+// }
 
-  const SecretFormField({
-    @required this.initialValue,
-    @required this.onSaved,
-    @required this.label,
-  });
-
-  @override
-  State<StatefulWidget> createState() {
-    return new _SecretFormFieldState();
-  }
-}
-
-class _SecretFormFieldState extends State<SecretFormField> {
-  TextEditingController controller = TextEditingController();
-
-  @override
-  void initState() {
-    controller.text = widget.initialValue;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField(
-      builder: (FormFieldState<String> state) {
-        return PasswordField(
-          hintText: widget.label,
-          controller: controller,
-        );
-      },
-      onSaved: (String val) {
-        widget.onSaved(controller.text);
-      },
-    );
-  }
-}
+// class _SecretFormFieldState extends State<SecretFormField> {
+//   TextEditingController controller = TextEditingController();
+//
+//   @override
+//   void initState() {
+//     controller.text = widget.initialValue;
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return FormField(
+//       builder: (FormFieldState<String> state) {
+//         return PasswordField(
+//           hintText: widget.label,
+//           controller: controller,
+//         );
+//       },
+//       onSaved: (String val) {
+//         widget.onSaved(controller.text);
+//       },
+//     );
+//   }
+// }
 
 /// A FormField for choosing integer values, rendered
 /// as a spinning chooser. You must provide a map

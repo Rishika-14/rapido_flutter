@@ -37,7 +37,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   }) {
     // default persistence
     if (persistenceProvider == null) {
-      persistenceProvider = LocalFilePersistence();
+      persistenceProvider = FirebasePersistence();
     }
     // initial values if provided
     if (initialValues != null) {
@@ -103,8 +103,10 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   /// data stores and Rapido.
   ///
   /// This function is not typically used during application development.
-  Document.fromMap(Map loadedData,
-      {this.persistenceProvider = const LocalFilePersistence()}) {
+  Document.fromMap(
+    Map loadedData, {
+    this.persistenceProvider = const FirebasePersistence(),
+  }) {
     if (loadedData == null) return;
 
     // create a copy of the loaded data in case the source map is read only
