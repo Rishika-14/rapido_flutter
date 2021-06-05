@@ -13,7 +13,10 @@ abstract class PersistenceProvider {
   saveDocument(Document doc);
 
   /// Loads all documents for the given DocumentList from storage
-  Future loadDocuments(DocumentList documentList, {Function onChangedListener});
+  Future loadDocuments(
+    DocumentList documentList, {
+    Function? onChangedListener,
+  });
 
   /// Deletes the given Document from storage
   Future deleteDocument(Document doc);
@@ -30,7 +33,7 @@ class FirebasePersistence implements PersistenceProvider {
 
   @override
   Future loadDocuments(DocumentList documentList,
-      {Function onChangedListener}) {
+      {Function? onChangedListener}) {
     // TODO: implement loadDocuments
     throw UnimplementedError();
   }
@@ -40,5 +43,4 @@ class FirebasePersistence implements PersistenceProvider {
     // TODO: implement saveDocument
     throw UnimplementedError();
   }
-
 }
