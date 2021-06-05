@@ -17,15 +17,20 @@ class BooleanFormField extends StatefulWidget {
   /// internet.
   final bool initialValue;
 
-  const BooleanFormField(this.fieldName,
-      {Key key, this.label, @required this.onSaved, this.initialValue: false})
-      : super(key: key);
+  const BooleanFormField(
+    this.fieldName, {
+    Key key,
+    required this.label,
+    required this.onSaved,
+    this.initialValue: false,
+  }) : super(key: key);
 
   _BooleanFormFieldState createState() => _BooleanFormFieldState();
 }
 
 class _BooleanFormFieldState extends State<BooleanFormField> {
-  bool currentValue;
+  bool? currentValue;
+
   @override
   void initState() {
     if (widget.initialValue == null) {
@@ -44,7 +49,7 @@ class _BooleanFormFieldState extends State<BooleanFormField> {
           Text(widget.label),
           Checkbox(
             value: currentValue,
-            onChanged: ((bool newVal) {
+            onChanged: ((bool? newVal) {
               setState(() {
                 currentValue = newVal;
               });
@@ -52,7 +57,7 @@ class _BooleanFormFieldState extends State<BooleanFormField> {
           ),
         ]);
       }),
-      onSaved: (bool val) {
+      onSaved: (bool? val) {
         widget.onSaved(currentValue);
       },
     );
