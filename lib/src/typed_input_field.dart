@@ -62,6 +62,8 @@ class TypedInputField extends StatelessWidget {
     if (fieldName.toLowerCase().endsWith("amount")) {
       return _getAmountFormField();
     }
+
+    //rishika
     if (fieldName.toLowerCase().endsWith("datetime")) {
       String dateTimeFormat;
       if (fieldOptions != null) {
@@ -71,6 +73,7 @@ class TypedInputField extends StatelessWidget {
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
     }
+    //rishika
     if (fieldName.toLowerCase().endsWith("date")) {
       String dateFormat;
       if (fieldOptions != null) {
@@ -93,6 +96,7 @@ class TypedInputField extends StatelessWidget {
       });
     }
 
+    //manthan
     if (fieldName.toLowerCase().endsWith("image")) {
       return ImageFormField(
         fieldName,
@@ -109,6 +113,7 @@ class TypedInputField extends StatelessWidget {
       return _getTextFormField(lines: 10);
     }
 
+    //amit
     if (fieldName.toLowerCase().endsWith("?")) {
       return BooleanFormField(
         fieldName,
@@ -120,6 +125,7 @@ class TypedInputField extends StatelessWidget {
       );
     }
 
+    //leave this for now.
     if (fieldName.toLowerCase().endsWith("secret")) {
       return SecretFormField(
         initialValue: initialValue,
