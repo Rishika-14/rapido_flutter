@@ -13,20 +13,20 @@ class DocumentPage extends StatelessWidget {
   final Document document;
 
   /// A decoration for the entire DocumentPage
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
 
   /// A decoration to apply to each field in the DocumentPage
-  final BoxDecoration fieldDecoration;
+  final BoxDecoration? fieldDecoration;
 
   /// A DocumentForm to enable editing the Document
   /// If not null, it will add an editing action to title bar
   /// of the page, which will push a DocumentForm on the navigation
   /// stack.
-  final DocumentForm documentForm;
+  final DocumentForm? documentForm;
 
   DocumentPage({
-    @required this.labels,
-    @required this.document,
+    required this.labels,
+    required this.document,
     this.decoration,
     this.fieldDecoration,
     this.documentForm,
@@ -43,18 +43,19 @@ class DocumentPage extends StatelessWidget {
           child: Container(
             decoration: fieldDecoration,
             child: ListTile(
-                title: Text(
-              document["subtitle"].toString(),
-              softWrap: true,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline,
-            )),
+              title: Text(
+                document["subtitle"].toString(),
+                softWrap: true,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ),
           ),
         ),
       );
     }
     labels.keys.forEach((String label) {
-      String fieldName = labels[label];
+      String fieldName = labels[label]!;
 
       if (fieldName != "title" && fieldName != "subtitle") {
         // add to the array of input fields
@@ -101,7 +102,7 @@ class DocumentPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return documentForm;
+                      return documentForm!;
                     }));
                   },
                 )
